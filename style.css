@@ -1,0 +1,8 @@
+.completed{
+    text-decoration:line-through;/*删除线*/
+    color:gray;
+}
+
+#message{
+    color:aqua;
+}
