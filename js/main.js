@@ -1,12 +1,14 @@
 //alert("JavaScript 运行成功！");
+import {saveTasks,loadTasks} from "./storage.js";
+
 const todoInput = document.getElementById("todoInput");
 const addButton = document.getElementById("addButton");
 const todoList = document.getElementById("todoList");
 const taskCount = document.getElementById("taskCount");
 const message = document.getElementById("message");
 
-const savedTasks = localStorage.getItem("tasks");
-const tasks = savedTasks ? JSON.parse(savedTasks) : [];//三元运算符
+let tasks = loadTasks();
+
 function addTodo() {
     const text = todoInput.value.trim();
     message.textContent = "";
@@ -22,7 +24,7 @@ function addTodo() {
     };
 
     tasks.push(task);//添加到数组
-    saveTasks();//存储到浏览器
+    saveTasks(tasks);//存储到浏览器
     renderTasks();//每次重新渲染页面
 
     todoInput.value = "";
@@ -35,7 +37,7 @@ function createTaskElement(task) {  //添加对应任务文本
     span.textContent = task.text;
     span.addEventListener("click", function () {//点击-completed更新
         task.completed = !task.completed;
-        saveTasks();
+        saveTasks(tasks);
         renderTasks();
         span.classList.toggle("completed");
     });
@@ -58,7 +60,7 @@ function createDeleteButton(task) {  //删除对应任务文本
         });
         if (index !== -1) {
             tasks.splice(index, 1);
-            saveTasks();
+            saveTasks(tasks);
             renderTasks();
         }
     });
@@ -92,11 +94,6 @@ function renderTasks() {  //更新todoList
     taskCount.textContent = "剩余未完成：" + unfinished.length + "个";
     todoList.appendChild(taskCount);
 }
-
-function saveTasks(){
-    localStorage.setItem("tasks",JSON.stringify(tasks));
-}
-
 
 
 
