@@ -1,11 +1,14 @@
 //alert("JavaScript 运行成功！");
-import {saveTasks,loadTasks} from "./storage.js";
+import { saveTasks, loadTasks } from "./storage.js";
 
 const todoInput = document.getElementById("todoInput");
 const addButton = document.getElementById("addButton");
 const todoList = document.getElementById("todoList");
-const taskCount = document.getElementById("taskCount");
 const message = document.getElementById("message");
+const allButton = document.getElementById("allButton");
+const activeButton = document.getElementById("activeButton");
+const completedButton = document.getElementById("completedButton");
+const taskCount = document.getElementById("taskCount");
 
 let tasks = loadTasks();
 
@@ -39,14 +42,13 @@ function createTaskElement(task) {  //添加对应任务文本
         task.completed = !task.completed;
         saveTasks(tasks);
         renderTasks();
-        span.classList.toggle("completed");
     });
     li.appendChild(span);
 
-    if(task.completed === true){
+    if (task.completed === true) {
         span.classList.add("completed");
     }
-    
+
     return li;
 }
 
@@ -77,30 +79,63 @@ todoInput.addEventListener("keydown", function (event) {  //Enter键-添加
     }
 });
 
+let currentFilter = "all";
+
+allButton.addEventListener("click", function () { //全部-按钮
+    currentFilter = "all";
+    renderTasks();
+});
+
+activeButton.addEventListener("click", function () {//未完成
+    currentFilter = "active";
+    renderTasks();
+});
+
+completedButton.addEventListener("click", function () {//完成
+    currentFilter = "completed";
+    renderTasks();
+});
+
+
+
+
 function renderTasks() {  //更新todoList
     todoList.innerHTML = "";
-    
-    tasks.forEach(function (task) {
+    let filteredTasks = tasks;
+
+    if(currentFilter === "all"){
+        const unfinish = tasks.filter(function (item) { 
+            return item.completed === false;
+        });
+        taskCount.textContent = "总计：" + filteredTasks.length + "个，未完成：" + 
+        unfinish.length + "个";
+    }
+
+    if (currentFilter === "active") {
+        filteredTasks = tasks.filter(function (item) { 
+            return item.completed === false;
+        });
+        taskCount.textContent = "未完成：" + filteredTasks.length + "个";
+    }
+
+    if (currentFilter === "completed") {
+        filteredTasks = tasks.filter(function (item) { 
+            return item.completed === true;
+        });
+        taskCount.textContent = "完成：" + filteredTasks.length + "个";
+    }
+
+    filteredTasks.forEach(function (task) {
         const li = createTaskElement(task);
         const deleteButton = createDeleteButton(task);
         li.appendChild(deleteButton);
         todoList.appendChild(li);
     });
 
-    const taskCount = document.createElement("p");
-    const unfinished = tasks.filter(function (item) { //更新任务数量
-        return item.completed === false;
-    });
-    taskCount.textContent = "剩余未完成：" + unfinished.length + "个";
-    todoList.appendChild(taskCount);
+    todoList.appendChild(taskCount);// 重新放到DOM树中
 }
 
 
 
 
-
-
-
-
-renderTasks();
-//Git 图像界面测试
+renderTasks();//进入网页刷新一次

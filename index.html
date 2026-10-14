@@ -13,9 +13,16 @@
     <input id="todoInput" type="text" placeholder="请输入任务">
     <button id="addButton">添加</button>
     <p id="message"></p>
+    
+    <div id="fileterButtons">
+        <button id="allButton">全部</button>
+        <button id="activeButton">未完成</button>
+        <button id="completedButton">已完成</button>
+    </div>
+
     <ul id="todoList">
 
-        <p>剩余未完成：0个</p>
+        <p id="taskCount"></p>
     </ul>
 
     <script type="module" src="./js/main.js"></script>
