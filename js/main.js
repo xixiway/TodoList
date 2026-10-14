@@ -34,7 +34,7 @@ function addTodo() {
     todoInput.focus();//让这个输入框获得焦点
 }
 
-function createTaskElement(task) {  //添加对应任务文本
+function createTaskElement(task) {  //添加对应任务文本-按钮
     const li = document.createElement("li");//createElement(标签名)，创建元素
     const span = document.createElement("span");
     span.textContent = task.text;
@@ -52,7 +52,7 @@ function createTaskElement(task) {  //添加对应任务文本
     return li;
 }
 
-function createDeleteButton(task) {  //删除对应任务文本
+function createDeleteButton(task) {  //删除对应任务文本-按钮
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "删除";
 
@@ -70,7 +70,21 @@ function createDeleteButton(task) {  //删除对应任务文本
     return deleteButton;
 }
 
-addButton.addEventListener("click", function () {  //点击按钮-添加
+function editTaskButton(task){  //编辑文本-按钮
+    const name = prompt("请输入任务名称");
+
+    if(name === "" || name === null){
+        return;
+    }
+
+    task.text = name;
+    saveTasks(tasks);
+    renderTasks();
+}
+
+
+
+addButton.addEventListener("click", function () {  //添加按钮-添加
     addTodo();
 });
 todoInput.addEventListener("keydown", function (event) {  //Enter键-添加
@@ -86,12 +100,12 @@ allButton.addEventListener("click", function () { //全部-按钮
     renderTasks();
 });
 
-activeButton.addEventListener("click", function () {//未完成
+activeButton.addEventListener("click", function () {//未完成-按钮
     currentFilter = "active";
     renderTasks();
 });
 
-completedButton.addEventListener("click", function () {//完成
+completedButton.addEventListener("click", function () {//完成-按钮
     currentFilter = "completed";
     renderTasks();
 });
@@ -127,7 +141,16 @@ function renderTasks() {  //更新todoList
 
     filteredTasks.forEach(function (task) {
         const li = createTaskElement(task);
+
+        const editButton = document.createElement("button");
+        editButton.addEventListener("click",function(){
+            editTaskButton(task);
+        })
+        editButton.textContent = "编辑";
+
         const deleteButton = createDeleteButton(task);
+
+        li.appendChild(editButton);
         li.appendChild(deleteButton);
         todoList.appendChild(li);
     });
